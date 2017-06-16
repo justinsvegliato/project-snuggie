@@ -2,21 +2,24 @@
     (:requirements
         :typing
         :numeric-fluents
+		:equality
         :durative-actions
         :duration-inequalities
     )
 
     (:types
-        location locatable pickable - object
-        wam robot uav - locatable
+        location locatable - object
+        wam robot uav platform - locatable
+		pickable - platform
         turtlebot dozerbot - robot
         fire-bepop power-bepop - uav
         computer greenblock - pickable
     )
 
     (:predicates
-        (computer-secured ?c - computer)
         (loc-at ?o - locatable ?l - location)
+
+		(flyable ?l - location)
         (flying ?u - uav)
         (landed ?u - uav ?l - location)
         (landed-on ?u - uav ?r - robot)
@@ -28,15 +31,24 @@
         (debris-cleared)
 
         (on-fire ?l - location)
-        (charged ?r - robot)
         (has-charger ?l - location)
-        (secured ?r - robot ?p - pickable)
+		(is-secure ?l - location)
+
+        (secured ?p - pickable)
+
+		(can-pick-from ?l - location)
+		(pickedup ?p - pickable ?w - wam)
+		(placed-on-pf ?p - pickable ?pf - platform)
+		(placed-on-r ?p - pickable ?r - robot)
     )
 
     (:functions
         (dist ?from - location ?to - location)
         (mv-speed ?r - robot)
         (fly-speed ?u - uav)
+
+		(bat-lvl ?t - turtlebot)
+		(chr-speed ?t - turtlebot)
     )
 
     (:durative-action launch-from-ground
@@ -73,6 +85,7 @@
             (/ (dist ?from ?to) (fly-speed ?u))
         )
         :condition (and
+            (over all (flyable ?to))
             (over all (flying ?u))
             (at start (loc-at ?u ?from))
         )
@@ -140,36 +153,41 @@
         :duration (= ?duration 
             (/ (dist ?from ?to) (mv-speed ?t))
         )
-        :condition
+        :condition (and
             (at start (loc-at ?t ?from))
+			(at start (> (bat-lvl ?t) 0))
+		)
         :effect (and
             (at start (not (loc-at ?t ?from)))
             (at end (loc-at ?t ?to))
+			(at end (decrease (bat-lvl ?t) 1))
         )
     )
 
-    (:durative-action charge
-        :parameters (?t - turtlebot ?l - location)
-        ; TODO Verify the duration
-        :duration (= ?duration 1)
-        :condition (and
-            (over all (loc-at ?t ?l))
-            (at start (has-charger ?l))
-        )
-        :effect
-            (at end (charged ?t))
-    )
+    ;;(:durative-action charge
+    ;;    :parameters (?t - turtlebot ?l - location)
+    ;;    :duration (= ?duration
+	;;		(* (- 5 (bat-lvl ?t)) (chr-speed ?t))
+	;;	)
+    ;;    :condition (and
+    ;;        (over all (loc-at ?t ?l))
+    ;;        (at start (has-charger ?l))
+	;;		(at start (< (bat-lvl ?t) 5))
+	;;	)
+    ;;    :effect
+	;;		(at end (= (bat-lvl ?t) 5))
+    ;;)
 
     (:durative-action secure-gadget
         :parameters (?t - turtlebot ?p - pickable ?l - location)
-        ; TODO Verify the duration
         :duration (= ?duration 1)
         :condition (and 
             (over all (loc-at ?t ?l))
-            (over all (loc-at ?g ?l))
+            (over all (is-secure ?l))
+            (over all (placed-on-r ?p ?t))
         )
         :effect
-            (at end (secured ?t ?g))
+            (at start (secured ?p))
     )
 
     (:durative-action move-debris
@@ -195,26 +213,63 @@
             (at end (dozer-at-home))
     )
 
-    (:durative-action pickup
-        :parameters (?w - wam ?p1 - pickable ?p2 - object)
-        ; TODO Verify the duration
+    (:durative-action pickup-gadget-from-platform
+        :parameters (?w - wam ?p - pickable ?pf - platform ?l - location)
+        ;; TODO Verify the duration
         :duration (= ?duration 1)
         :condition (and 
-            (over all (loc-at ?t ?l))
-            (over all (loc-at ?p ?l))
+			(over all (loc-at ?pf ?l))
+			(over all (can-pick-from ?l))
+			(at start (placed-on-pf ?p ?pf))
         )
-        :effect (
-            (at end (secured ?t ?p))
+        :effect (and
+			(at start (not (placed-on-pf ?p ?pf)))
+            (at end (pickedup ?p ?w))
         )
     )
 
-    (:durative-action place
-        :parameters (?w - wam ?p1 - pickable ?p2 - object)
-        ; TODO Verify the duration
+    (:durative-action pickup-gadget-from-robot
+        :parameters (?w - wam ?p - pickable ?r - robot ?l - location)
+        ;; TODO Verify the duration
         :duration (= ?duration 1)
         :condition (and 
+			(over all (loc-at ?r ?l))
+			(over all (can-pick-from ?l))
+			(at start (placed-on-r ?p ?r))
         )
-        :effect (
+        :effect (and
+			(at end (not (placed-on-r ?p ?r)))
+            (at end (pickedup ?p ?w))
+        )
+    )
+
+    (:durative-action place-gadget-on-platform
+        :parameters (?w - wam ?p - pickable ?pf - platform ?l - location)
+        ;; TODO Verify the duration
+        :duration (= ?duration 1)
+        :condition (and
+			(over all (loc-at ?pf ?l))
+			(over all (can-pick-from ?l))
+			(at start (pickedup ?p ?w))
+		)
+        :effect (and
+			(at end (not (pickedup ?p ?w)))
+			(at end (placed-on-pf ?p ?pf))
+		)
+    )
+
+    (:durative-action place-gadget-on-robot
+        :parameters (?w - wam ?p - pickable ?r - robot ?l - location)
+        ;; TODO Verify the duration
+        :duration (= ?duration 1)
+        :condition (and 
+			(over all (loc-at ?r ?l))
+			(over all (can-pick-from ?l))
+			(at start (pickedup ?p ?w))
+        )
+        :effect (and
+			(at end (not (pickedup ?p ?w)))
+			(at end (placed-on-r ?p ?r))
         )
     )
 )

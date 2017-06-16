@@ -2,6 +2,8 @@
     (:domain labrescue)
     (:objects
         dozerbot-home turtlebot-home pickup-area launch-area landing-area secure-area - location
+		fire-loc table-loc - location
+		tabletop - platform
         turtle - turtlebot
         dozer - dozerbot
         fire-bepop - fire-bepop
@@ -11,9 +13,26 @@
 
     (:init
         (loc-at turtle turtlebot-home)
-        (loc-at dozerbot dozerbot-home)
+        (loc-at dozer dozerbot-home)
         (loc-at fire-bepop pickup-area)
         (loc-at power-bepop pickup-area)
+
+		(flyable launch-area)
+		(flyable dozerbot-home)
+		(flyable landing-area)
+		(flyable secure-area)
+		(flyable fire-loc)
+
+		(on-fire fire-loc)
+		(is-secure secure-area)
+
+		(can-pick-from pickup-area)
+		(can-pick-from table-loc)
+		(loc-at tabletop table-loc)
+
+		(has-charger turtlebot-home)
+		(= (chr-speed turtle) 1)
+		(= (bat-lvl turtle) 5)
         
         (= (dist turtlebot-home launch-area) 1355.95)
         (= (dist turtlebot-home pickup-area) 2466.00)
