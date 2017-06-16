@@ -1,9 +1,8 @@
 (define (problem get-the-code)
     (:domain labrescue)
     (:objects
-        dozerbot-home turtlebot-home pickup-area launch-area landing-area secure-area - location
-		fire-loc table-loc - location
-		tabletop - platform
+        dozerbot-home turtlebot-home pickup-area launch-area landing-area secure-area tabletop - location
+		fire-loc - location
         turtle - turtlebot
         dozer - dozerbot
         fire-bepop - fire-bepop
@@ -27,9 +26,8 @@
 		(on-fire fire-loc)
 		(is-secure secure-area)
 
-		(can-pick-from pickup-area)
-		(can-pick-from table-loc)
-		(loc-at tabletop table-loc)
+		(reachable pickup-area)
+		(reachable tabletop)
 
 		(has-charger turtlebot-home)
 		(= (chr-speed turtle) 1)
@@ -73,7 +71,7 @@
     )
 
     (:goal (and
-		(secured computer)
+		(computer-secured computer)
 		(loc-at turtle secure-area)
 		(loc-at fire-bepop secure-area)
     ))
