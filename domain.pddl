@@ -16,16 +16,22 @@
 
 	(:predicates
 		(computer-secured ?c - computer)
-		(?loc-at ?o - locatable ?l - location)
+		(loc-at ?o - locatable ?l - location)
 		(flying ?u - uav)
-		(landed ?u - uav)
+		(landed ?u - uav ?l - location)
 		(landed-on ?u - uav ?r - robot)
-		(clear ?r - robot)
+		(clear ?r - robot) 
 
 		(dozer-on)
 		(dozer-at-home)
 		(fire-on)
 		(debris-cleared)
+
+		(on-fire ?l - location)
+		(charged ?r - robot)
+		(has-charger ?l - location)
+		(secured ?r - robot ?p - pickable)
+
 	)
 
 	(:functions
@@ -37,11 +43,29 @@
 	(:durative-action launch-from-ground
 		:parameters (?u - uav ?l - location)
 		:duration (= ?duration 1)
+		:condition (and
+			(over all (loc-at ?u ?l))
+			(at start (landed ?u ?l))
+		)
+		:effect (and
+			(at start (not (landed ?u ?l)))
+			(at end (flying ?u))
+		)
 	)
 
 	(:durative-action launch-from-robot
 		:parameters (?u - uav ?r - robot ?l - location)
 		:duration (= ?duration 1)
+		:condition (and
+			(over all (loc-at ?r ?l))
+			(at start (landed-on ?u ?r))
+		)
+		:effect (and
+			(at start (not (landed-on ?d ?r)))
+			(at start (loc-at ?u ?l))
+			(at end (flying ?u))
+			(at end (clear ?r))
+		)
 	)
 
 	(:durative-action fly-to
@@ -61,32 +85,105 @@
 
 	(:durative-action land-on-ground
 		:parameters (?u - uav ?l - location)
+		:duration (= ?duration 1)
+		:condition (and
+			(over all (loc-at ?u ?l))
+			(at start (flying ?u))
+		)
+		:effect (and
+			(at end (not (flying ?u)))
+			(at end (landed-on ?u ?r))
+		)
 	)
 
 	(:durative-action land-on-robot
 		:parameters (?u - uav ?r - robot ?l - location)
+		:duration (= ?duration 1)
+		:condition (and
+			(over all (loc-at ?u ?l))
+			(over all (loc-at ?r ?l))
+			(at start (flying ?u))
+			(at start (clear ?r))
+		)
+		:effect (and
+			(at start (not (clear ?r)))
+			(at end (not (loc-at ?u ?l)))
+			(at end (not (flying ?u)))
+			(at end (landed-on ?u ?r))
+		)
 	)
 
 	(:durative-action put-out-fire
-		:parameters (?u - fire-bepop)
+		:parameters (?u - fire-bepop ?l - location)
+		:duration (= ?duration 1)
+		:condition (and
+			(over all (loc-at ?u ?l))
+			(over all (flying ?u))
+		)
+		:effect (and
+			(at end (not (on-fire ?l)))
+		)
 	)
 
 	(:durative-action power-dozerbot
-		:parameters (?u - power-bepop)
+		:parameters (?u - power-bepop ?r - dozerbot)
+		:duration (= ?duration 1)
+		:condition (and
+			(over all (landed-on ?u ?r))
+		)
+		:effect (and
+			(at start (dozer-on ?r))
+		)
 	)
 
 	(:durative-action drive-to
-		:parameters (?t - turtlebot)
+		:parameters (?t - turtlebot ?from - location ?to - location)
+		:duration (= ?duration 
+		    (/ (dist ?from ?to) (mv-speed ?u))
+		)
+		:condition (
+		    (at start (at-loc ?t ?from))
+		)
+		:effect (and
+		    (at start (not (at-loc ?t ?from)))
+		    (at end (at-loc ?t ?to))
+		)
 	)
 
-	(:durative-action move
-		:parameters (?w - wam ?o - pickable)
-	)
+; 	(:durative-action move
+; 		:parameters (?w - wam ?o - pickable)
+; 		:duration (
+; 		)
+; 		:condition (
+; 		)
+; 		:effect (
+; 		)
+; 	)
 
 	(:durative-action charge
+		:parameters (?t - turtlebot ?l - location)
+	    ; TODO Verify the duration
+	    :duration (= ?duration 1)
+		:condition (and
+		    (over all (at-loc ?t ?l))
+		    (at start (has-charger ?l))
+		)
+		:effect (
+		    (at end (charged ?t))
+		)
 	)
 
 	(:durative-action secure-gadget
+	    :parameters (?t - turtlebot ?g - pickable ?l - location)
+	    ; TODO Verify the duration
+		:duration (= ?duration 1)
+		:condition (and 
+		    (over all (at-loc ?t ?l))
+		    (over all (at-loc ?g ?l))
+		)
+		:effect (
+		    (at end (secured ?t ?g))
+		)
 	)
 
 	(:durative-action move-debris
