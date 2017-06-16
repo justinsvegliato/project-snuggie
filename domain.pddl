@@ -28,8 +28,10 @@
         (fire-off)
         (debris-cleared)
 
+		(no-debris ?l - location)
         (on-fire ?l - location)
         (has-charger ?l - location)
+		(charged ?t - turtlebot)
 		(is-secure ?l - location)
 
         (computer-secured ?p - pickable)
@@ -49,7 +51,6 @@
         (fly-speed ?u - uav)
 
 		(bat-lvl ?t - turtlebot)
-		(chr-speed ?t - turtlebot)
     )
 
     (:durative-action launch-from-ground
@@ -70,6 +71,7 @@
         :parameters (?u - uav ?r - robot ?l - location)
         :duration (= ?duration 3)
         :condition (and
+            (over all (flyable ?l))
             (over all (loc-at ?r ?l))
             (at start (landed-on ?u ?r))
         )
@@ -103,8 +105,10 @@
         :condition (and
             (over all (loc-at ?u ?l))
             (at start (flying ?u))
+            ;(at start (no-debris ?u))
         )
         :effect (and
+            (at end (not (loc-at ?u ?l)))
             (at end (not (flying ?u)))
             (at end (landed ?u ?l))
         )
@@ -156,9 +160,9 @@
             (/ (dist ?from ?to) (mv-speed ?t))
         )
         :condition (and
-            (over all (dozer-at-home))
+            (over all (no-debris ?to))
             (at start (loc-at ?t ?from))
-			(at start (> (bat-lvl ?t) 0))
+			(at start (>= (bat-lvl ?t) 1))
 		)
         :effect (and
             (at start (not (loc-at ?t ?from)))
@@ -175,11 +179,13 @@
             (at start (has-charger ?l))
 			(at start (< (bat-lvl ?t) 5))
 		)
-        :effect
+        :effect (and
+			(at end (charged ?t))
 			(at end (assign (bat-lvl ?t) 5))
+		)
     )
 
-    (:durative-action secure-gadget
+    (:durative-action secure-computer
         :parameters (?t - turtlebot ?p - pickable ?l - location)
         :duration (= ?duration 2)
         :condition (and 
@@ -203,15 +209,17 @@
     )
 
     (:durative-action return-to-home
-        :parameters ()
+        :parameters (?l - location)
         :duration (= ?duration 15)
         :condition (and
             (over all (dozer-on))
             (at start (fire-off))
             (over all (debris-cleared))
         )
-        :effect
+        :effect (and
             (at end (dozer-at-home))
+            (at end (no-debris ?l))
+		)
     )
 
 	(:durative-action pickup-uav-loc
@@ -243,17 +251,20 @@
 		)
 	)
 
-	(:durative-action place-uav-loc
-		:parameters (?w - wam ?u - uav ?l - location)
+	(:durative-action place-uav-robot
+		:parameters (?w - wam ?u - uav ?t - turtlebot ?l - location)
 		:duration (= ?duration 10)
 		:condition (and
 			(over all (reachable ?l))
+			(over all (loc-at ?t ?l))
 			(at start (holding-u ?w ?u))
+			(at start (clear ?t))
 		)
 		:effect (and
+			(at start (not (clear ?t)))
 			(at end (not (holding-u ?w ?u)))
 			(at end (free-arm ?w))
-			(at end (landed ?u ?l))
+			(at end (landed-on ?u ?t))
 		)
 	)
 

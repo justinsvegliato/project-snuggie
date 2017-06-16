@@ -34,13 +34,15 @@
 		(clear dozer)
 		(clear turtle)
 
+		(no-debris launch-area)
+		(no-debris pickup-area)
+		(no-debris turtlebot-home)
+
 		(reachable pickup-area)
-		(reachable launch-area)
 		(reachable tabletop)
 
 		(has-charger turtlebot-home)
-		(= (chr-speed turtle) 1)
-		(= (bat-lvl turtle) 5)
+		(= (bat-lvl turtle) 10)
 
 		(= (mv-speed turtle) 1)
 		(= (mv-speed dozer) 1)
@@ -97,7 +99,8 @@
 		(= (dist fire secure-area) 610.4140521)
     )
 
-    (:goal (and
+	(:goal (and
 		(computer-secured computer)
-    ))
+		(landed fire-bepop landing-area)
+	))
 )
