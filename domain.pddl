@@ -156,6 +156,7 @@
             (/ (dist ?from ?to) (mv-speed ?t))
         )
         :condition (and
+            (over all (dozer-at-home))
             (at start (loc-at ?t ?from))
 			(at start (> (bat-lvl ?t) 0))
 		)
