@@ -1,31 +1,55 @@
 (define (problem get-the-code)
 	(:domain labrescue)
 	(:objects
-		home loc1 loc2 - location
+		dozerbot-home turtlebot-home pickup-area launch-area landing-area secure-area - location
 		turtle - turtlebot
 		dozer - dozerbot
-		fire-bep - firedrone
-		power-bep - driverdrone
+		fire-bepop - fire-bepop
+		power-bepop - power-bepop
+		wam - wam
 	)
 
 	(:init
-		(loc-at turtle home)
-		(loc-at dozer home)
-
-		(landed-on power-bep turtle)
-		(landed-on fire-bep dozer)
-
-		(= (mv-speed turtle) 2)
-		(= (mv-speed dozer) 1)
-		(= (fly-speed fire-bep) 10)
-		(= (fly-speed power-bep) 10)
-
-		(= (dist home loc1) 40)
-		(= (dist loc1 home) 40)
-		(= (dist home loc2) 50)
-		(= (dist loc2 home) 50)
-		(= (dist loc1 loc2) 30)
-		(= (dist loc2 loc1) 30)
+        (loc-at turtle turtlebot-home)
+        (loc-at dozerbot dozerbot-home)
+        (loc-at fire-bepop pickup-area)
+        (loc-at power-bepop pickup-area)
+        
+        (= (dist turtlebot-home launch-area) 0)
+        (= (dist turtlebot-home pickup-area) 0)
+        (= (dist turtlebot-home landing-area) 0)
+        (= (dist turtlebot-home dozerbot-home) 0)
+        (= (dist turtlebot-home secure-area) 0)
+        
+        (= (dist launch-area turtlebot-home) 0)
+        (= (dist launch-area pickup-area) 0)
+        (= (dist launch-area landing-area) 0)
+        (= (dist launch-area dozerbot-home) 0)
+        (= (dist launch-area secure-area) 0)
+        
+        (= (dist pickup-area turtlebot-home) 0)
+        (= (dist pickup-area launch-area) 0)
+        (= (dist pickup-area landing-area) 0)
+        (= (dist pickup-area dozerbot-home) 0)
+        (= (dist pickup-area secure-area) 0)
+        
+        (= (dist landing-area turtlebot-home) 0)
+        (= (dist landing-area launch-area) 0)
+        (= (dist landing-area pickup-area) 0)
+        (= (dist landing-area dozerbot-home) 0)
+        (= (dist landing-area secure-area) 0)
+        
+        (= (dist dozerbot-home turtlebot-home) 0)
+        (= (dist dozerbot-home launch-area) 0)
+        (= (dist dozerbot-home pickup-area) 0)
+        (= (dist dozerbot-home landing-area) 0)
+        (= (dist dozerbot-home secure-area) 0)
+        
+        (= (dist secure-area turtlebot-home) 0)
+        (= (dist secure-area launch-area) 0)
+        (= (dist secure-area pickup-area) 0)
+        (= (dist secure-area landing-area) 0)
+        (= (dist secure-area dozerbot-home) 0)
 	)
 
 	(:goal (and

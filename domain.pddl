@@ -79,30 +79,20 @@
 		    (/ (dist ?from ?to) (mv-speed ?u))
 		)
 		:condition (
-		    (at start (at-loc ?t ?from))
+		    (at start (loc-at ?t ?from))
 		)
 		:effect (and
-		    (at start (not (at-loc ?t ?from)))
-		    (at end (at-loc ?t ?to))
+		    (at start (not (loc-at ?t ?from)))
+		    (at end (loc-at ?t ?to))
 		)
 	)
-
-; 	(:durative-action move
-; 		:parameters (?w - wam ?o - pickable)
-; 		:duration (
-; 		)
-; 		:condition (
-; 		)
-; 		:effect (
-; 		)
-; 	)
 
 	(:durative-action charge
 		:parameters (?t - turtlebot ?l - location)
 	    ; TODO Verify the duration
 	    :duration (= ?duration 1)
 		:condition (and
-		    (over all (at-loc ?t ?l))
+		    (over all (loc-at ?t ?l))
 		    (at start (has-charger ?l))
 		)
 		:effect (
@@ -111,15 +101,15 @@
 	)
 
 	(:durative-action secure-gadget
-	    :parameters (?t - turtlebot ?g - pickable ?l - location)
+	    :parameters (?t - turtlebot ?p - pickable ?l - location)
 	    ; TODO Verify the duration
 		:duration (= ?duration 1)
 		:condition (and 
-		    (over all (at-loc ?t ?l))
-		    (over all (at-loc ?g ?l))
+		    (over all (loc-at ?t ?l))
+		    (over all (loc-at ?p ?l))
 		)
 		:effect (
-		    (at end (secured ?t ?g))
+		    (at end (secured ?t ?p))
 		)
 	)
 
@@ -130,8 +120,25 @@
 	)
 
 	(:durative-action pickup
+	    :parameters (?w - wam ?p1 - pickable ?p2 - object)
+	    ; TODO Verify the duration
+	    :duration (= ?duration 1)
+		:condition (and 
+		    (over all (loc-at ?t ?l))
+		    (over all (loc-at ?p ?l))
+		)
+		:effect (
+		    (at end (secured ?t ?p))
+		)
 	)
 
 	(:durative-action place
+	    :parameters (?w - wam ?p1 - pickable ?p2 - object)
+	    ; TODO Verify the duration
+	    :duration (= ?duration 1)
+		:condition (and 
+		)
+		:effect (
+		)
 	)
 )
