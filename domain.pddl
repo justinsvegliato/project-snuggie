@@ -20,12 +20,19 @@
 		(flying ?u - uav)
 		(landed ?u - uav ?l - location)
 		(landed-on ?u - uav ?r - robot)
-		(clear ?r - robot)
+		(clear ?r - robot) 
+
+		(dozer-on)
+		(dozer-at-home)
+		(fire-off)
+		(debris-cleared)
+
 		(on-fire ?l - location)
 		(fire-off)
 		(charged ?r - robot)
 		(has-charger ?l - location)
 		(secured ?r - robot ?p - pickable)
+
 	)
 
 	(:functions
@@ -183,9 +190,26 @@
 	)
 
 	(:durative-action move-debris
+		:duration (= ?duration 100)
+		:condition (and
+			(at start (fire-off))
+			(over all (dozer-on))		
+		)
+		:effect (and
+			(at end (debris-cleared))
+		)
 	)
 
 	(:durative-action return-to-home
+		:duration (= ?duration 100)
+		:condition (and
+			(over all (dozer-on))
+			(at start (fire-off))
+			(over all (debris-cleared))
+		)
+		:effect (and
+			(at end (dozer-at-home))
+		)
 	)
 
 	(:durative-action pickup
