@@ -22,6 +22,9 @@
 		(landed-on ?u - uav ?r - robot)
 		(clear ?r - robot)
 		(on-fire ?l - location)
+		(charged ?r - robot)
+		(has-charger ?l - location)
+		(secured ?r - robot ?p - pickable)
 	)
 
 	(:functions
@@ -127,17 +130,53 @@
 	)
 
 	(:durative-action drive-to
-		:parameters (?t - turtlebot)
+		:parameters (?t - turtlebot ?from - location ?to - location)
+		:duration (= ?duration 
+		    (/ (dist ?from ?to) (mv-speed ?u))
+		)
+		:condition (
+		    (at start (at-loc ?t ?from))
+		)
+		:effect (and
+		    (at start (not (at-loc ?t ?from)))
+		    (at end (at-loc ?t ?to))
+		)
 	)
 
-	(:durative-action move
-		:parameters (?w - wam ?o - pickable)
-	)
+; 	(:durative-action move
+; 		:parameters (?w - wam ?o - pickable)
+; 		:duration (
+; 		)
+; 		:condition (
+; 		)
+; 		:effect (
+; 		)
+; 	)
 
 	(:durative-action charge
+		:parameters (?t - turtlebot ?l - location)
+	    ; TODO Verify the duration
+	    :duration (= ?duration 1)
+		:condition (and
+		    (over all (at-loc ?t ?l))
+		    (at start (has-charger ?l))
+		)
+		:effect (
+		    (at end (charged ?t))
+		)
 	)
 
 	(:durative-action secure-gadget
+	    :parameters (?t - turtlebot ?g - pickable ?l - location)
+	    ; TODO Verify the duration
+		:duration (= ?duration 1)
+		:condition (and 
+		    (over all (at-loc ?t ?l))
+		    (over all (at-loc ?g ?l))
+		)
+		:effect (
+		    (at end (secured ?t ?g))
+		)
 	)
 
 	(:durative-action move-debris
