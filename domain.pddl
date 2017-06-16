@@ -22,6 +22,7 @@
 		(landed-on ?u - uav ?r - robot)
 		(clear ?r - robot)
 		(on-fire ?l - location)
+		(fire-off)
 		(charged ?r - robot)
 		(has-charger ?l - location)
 		(secured ?r - robot ?p - pickable)
@@ -112,9 +113,11 @@
 		:condition (and
 			(over all (loc-at ?u ?l))
 			(over all (flying ?u))
+			(at start (on-fire ?l))
 		)
 		:effect (and
 			(at end (not (on-fire ?l)))
+			(at end (fire-off))
 		)
 	)
 
