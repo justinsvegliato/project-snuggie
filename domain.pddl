@@ -16,29 +16,50 @@
 
 	(:predicates
 		(computer-secured ?c - computer)
+		(?loc-at ?o - locatable ?l - location)
+		(flying ?u - uav)
+		(landed ?u - uav)
+		(landed-on ?u - uav ?r - robot)
+		(clear ?r - robot)
 	)
 
 	(:functions
+		(dist ?from - location ?to - location)
+		(mv-speed ?r - robot)
+		(fly-speed ?u - uav)
 	)
 
 	(:durative-action launch-from-ground
-		:parameters (?u - uav ?r - robot ?l - location)
+		:parameters (?u - uav ?l - location)
+		:duration (= ?duration 1)
 	)
 
-	(:durative-action launch-from-
+	(:durative-action launch-from-robot
 		:parameters (?u - uav ?r - robot ?l - location)
+		:duration (= ?duration 1)
 	)
 
 	(:durative-action fly-to
 		:parameters (?u - uav ?from - location ?to - location)
+		:duration (= ?duration
+			(/ (dist ?from ?to) (fly-speed ?u))
+		)
+		:condition (and
+			(over all (flying ?u))
+			(at start (loc-at ?u ?from))
+		)
+		:effect (and
+			(at start (not (loc-at ?u ?from)))
+			(at end (loc-at ?u ?to))
+		)
 	)
 
-	(:durative-action land
-		:parameters (?u - uav)
+	(:durative-action land-on-ground
+		:parameters (?u - uav ?l - location)
 	)
 
 	(:durative-action land-on-robot
-		:parameters (?u - uav)
+		:parameters (?u - uav ?r - robot ?l - location)
 	)
 
 	(:durative-action put-out-fire
