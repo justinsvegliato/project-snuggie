@@ -60,7 +60,7 @@
 			(at start (landed-on ?u ?r))
 		)
 		:effect (and
-			(at start (not (landed-on ?d ?r)))
+			(at start (not (landed-on ?u ?r)))
 			(at start (loc-at ?u ?l))
 			(at end (flying ?u))
 			(at end (clear ?r))
@@ -91,7 +91,7 @@
 		)
 		:effect (and
 			(at end (not (flying ?u)))
-			(at end (landed-on ?u ?r))
+			(at end (landed ?u ?l))
 		)
 	)
 
@@ -129,49 +129,45 @@
 	(:durative-action power-dozerbot
 		:parameters (?u - power-bepop ?r - dozerbot)
 		:duration (= ?duration 1)
-		:condition (and
+		:condition
 			(over all (landed-on ?u ?r))
-		)
-		:effect (and
-			(at start (dozer-on ?r))
-		)
+		:effect
+			(at start (dozer-on))
 	)
 
 	(:durative-action drive-to
 		:parameters (?t - turtlebot ?from - location ?to - location)
 		:duration (= ?duration 
-		    (/ (dist ?from ?to) (mv-speed ?u))
+		    (/ (dist ?from ?to) (mv-speed ?t))
 		)
-		:condition (
-		    (at start (at-loc ?t ?from))
-		)
+		:condition
+		    (at start (loc-at ?t ?from))
 		:effect (and
-		    (at start (not (at-loc ?t ?from)))
-		    (at end (at-loc ?t ?to))
+		    (at start (not (loc-at ?t ?from)))
+		    (at end (loc-at ?t ?to))
 		)
 	)
 
-; 	(:durative-action move
-; 		:parameters (?w - wam ?o - pickable)
-; 		:duration (
-; 		)
-; 		:condition (
-; 		)
-; 		:effect (
-; 		)
-; 	)
+;; 	(:durative-action move
+;; 		:parameters (?w - wam ?o - pickable)
+;; 		:duration (
+;; 		)
+;; 		:condition (
+;; 		)
+;; 		:effect (
+;; 		)
+;; 	)
 
 	(:durative-action charge
 		:parameters (?t - turtlebot ?l - location)
 	    ; TODO Verify the duration
 	    :duration (= ?duration 1)
 		:condition (and
-		    (over all (at-loc ?t ?l))
+		    (over all (loc-at ?t ?l))
 		    (at start (has-charger ?l))
 		)
-		:effect (
+		:effect
 		    (at end (charged ?t))
-		)
 	)
 
 	(:durative-action secure-gadget
@@ -179,40 +175,39 @@
 	    ; TODO Verify the duration
 		:duration (= ?duration 1)
 		:condition (and 
-		    (over all (at-loc ?t ?l))
-		    (over all (at-loc ?g ?l))
+		    (over all (loc-at ?t ?l))
+		    (over all (loc-at ?g ?l))
 		)
-		:effect (
+		:effect
 		    (at end (secured ?t ?g))
-		)
 	)
 
 	(:durative-action move-debris
+		:parameters ()
 		:duration (= ?duration 100)
 		:condition (and
 			(at start (fire-off))
 			(over all (dozer-on))		
 		)
-		:effect (and
+		:effect
 			(at end (debris-cleared))
-		)
 	)
 
 	(:durative-action return-to-home
+		:parameters ()
 		:duration (= ?duration 100)
 		:condition (and
 			(over all (dozer-on))
 			(at start (fire-off))
 			(over all (debris-cleared))
 		)
-		:effect (and
+		:effect
 			(at end (dozer-at-home))
-		)
 	)
 
-	(:durative-action pickup
-	)
-
-	(:durative-action place
-	)
+;; 	(:durative-action pickup
+;; 	)
+;; 
+;; 	(:durative-action place
+;; 	)
 )
