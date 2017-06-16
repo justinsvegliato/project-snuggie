@@ -35,7 +35,8 @@
         (computer-secured ?p - pickable)
 
 		(reachable ?l - location)
-		(placed ?p - pickable ?l - location)
+		(placed ?top - pickable ?l - location)
+		(placed-above ?top - pickable ?bot - pickable)
 		(placed-on ?p - pickable ?t - turtlebot)
 		(free-arm ?w - wam)
 		(holding-u ?w - wam ?u - uav)
@@ -55,11 +56,12 @@
         :parameters (?u - uav ?l - location)
         :duration (= ?duration 3)
         :condition (and
-            (over all (loc-at ?u ?l))
+			(over all (flyable ?l))
             (at start (landed ?u ?l))
         )
         :effect (and
             (at start (not (landed ?u ?l)))
+            (at end (loc-at ?u ?l))
             (at end (flying ?u))
         )
     )
@@ -226,18 +228,17 @@
 		)
 	)
 
-	(:durative-action pickup-gadget-loc
-		:parameters (?w - wam ?p - pickable ?l - location)
+	(:durative-action pickup-gadget-other
+		:parameters (?w - wam ?top - pickable ?bot - pickable)
 		:duration (= ?duration 10)
 		:condition (and
-			(over all (reachable ?l))
-			(at start (placed ?p ?l))
+			(at start (placed-above ?top ?bot))
 			(at start (free-arm ?w))
 		)
 		:effect (and
 			(at start (not (free-arm ?w)))
-			(at start (not (placed ?p ?l)))
-			(at end (holding-p ?w ?p))
+			(at start (not (placed-above ?top ?bot)))
+			(at end (holding-p ?w ?top))
 		)
 	)
 
