@@ -24,7 +24,7 @@
 
 		(dozer-on)
 		(dozer-at-home)
-		(fire-on)
+		(fire-off)
 		(debris-cleared)
 
 		(on-fire ?l - location)
@@ -189,7 +189,7 @@
 	(:durative-action move-debris
 		:duration (= ?duration 100)
 		:condition (and
-			(at start (not(fire-on)))
+			(at start (fire-off))
 			(over all (dozer-on))		
 		)
 		:effect (and
@@ -201,7 +201,7 @@
 		:duration (= ?duration 100)
 		:condition (and
 			(over all (dozer-on))
-			(at start (not(fire-on)))
+			(at start (fire-off))
 			(over all (debris-cleared))
 		)
 		:effect (and
