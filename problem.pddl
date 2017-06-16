@@ -14,8 +14,12 @@
     (:init
         (loc-at turtle turtlebot-home)
         (loc-at dozer dozerbot-home)
-        (loc-at fire-bepop pickup-area)
-        (loc-at power-bepop pickup-area)
+
+        (landed fire-bepop tabletop)
+        (landed power-bepop tabletop)
+
+        (placed computer tabletop)
+        (placed greenblock tabletop)
 
 		(flyable launch-area)
 		(flyable dozerbot-home)
@@ -27,11 +31,17 @@
 		(is-secure secure-area)
 
 		(reachable pickup-area)
+		(reachable launch-area)
 		(reachable tabletop)
 
 		(has-charger turtlebot-home)
 		(= (chr-speed turtle) 1)
 		(= (bat-lvl turtle) 5)
+
+		(= (mv-speed turtle) 1)
+		(= (mv-speed dozer) 1)
+		(= (fly-speed fire-bepop) 10)
+		(= (fly-speed power-bepop) 10)
         
         (= (dist turtlebot-home launch-area) 1355.95)
         (= (dist turtlebot-home pickup-area) 2466.00)
@@ -72,7 +82,5 @@
 
     (:goal (and
 		(computer-secured computer)
-		(loc-at turtle secure-area)
-		(loc-at fire-bepop secure-area)
     ))
 )
