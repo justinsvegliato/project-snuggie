@@ -189,7 +189,7 @@
 	(:durative-action move-debris
 		:duration (= ?duration 100)
 		:condition (and
-			(at start (fire-off))
+			(at start (not(fire-on)))
 			(over all (dozer-on))		
 		)
 		:effect (and
@@ -201,7 +201,7 @@
 		:duration (= ?duration 100)
 		:condition (and
 			(over all (dozer-on))
-			(at start (fire-off))
+			(at start (not(fire-on)))
 			(over all (debris-cleared))
 		)
 		:effect (and
