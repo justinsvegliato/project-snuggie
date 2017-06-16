@@ -164,19 +164,19 @@
         )
     )
 
-    ;;(:durative-action charge
-    ;;    :parameters (?t - turtlebot ?l - location)
-    ;;    :duration (= ?duration
-	;;		(* (- 5 (bat-lvl ?t)) (chr-speed ?t))
-	;;	)
-    ;;    :condition (and
-    ;;        (over all (loc-at ?t ?l))
-    ;;        (at start (has-charger ?l))
-	;;		(at start (< (bat-lvl ?t) 5))
-	;;	)
-    ;;    :effect
-	;;		(at end (= (bat-lvl ?t) 5))
-    ;;)
+    (:durative-action charge
+        :parameters (?t - turtlebot ?l - location)
+        :duration (= ?duration
+			(/ (- 5 (bat-lvl ?t)) (chr-speed ?t))
+		)
+        :condition (and
+            (over all (loc-at ?t ?l))
+            (at start (has-charger ?l))
+			(at start (< (bat-lvl ?t) 5))
+		)
+        :effect
+			(at end (assign (bat-lvl ?t) 5))
+    )
 
     (:durative-action secure-gadget
         :parameters (?t - turtlebot ?p - pickable ?l - location)

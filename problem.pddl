@@ -9,6 +9,7 @@
         fire-bepop - fire-bepop
         power-bepop - power-bepop
         wam - wam
+		computer greenblock - pickable
     )
 
     (:init
@@ -72,5 +73,8 @@
     )
 
     (:goal (and
+		(secured computer)
+		(loc-at turtle secure-area)
+		(loc-at fire-bepop secure-area)
     ))
 )
