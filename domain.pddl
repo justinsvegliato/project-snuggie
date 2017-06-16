@@ -28,11 +28,9 @@
 		(debris-cleared)
 
 		(on-fire ?l - location)
-		(fire-off)
 		(charged ?r - robot)
 		(has-charger ?l - location)
 		(secured ?r - robot ?p - pickable)
-
 	)
 
 	(:functions
