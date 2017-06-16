@@ -31,7 +31,6 @@
 		(no-debris ?l - location)
         (on-fire ?l - location)
         (has-charger ?l - location)
-		(charged ?t - turtlebot)
 		(is-secure ?l - location)
 
         (computer-secured ?p - pickable)
@@ -179,7 +178,6 @@
 			(at start (< (bat-lvl ?t) 5))
 		)
         :effect (and
-			(at end (charged ?t))
 			(at end (assign (bat-lvl ?t) 5))
 		)
     )

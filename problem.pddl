@@ -100,7 +100,6 @@
 
 	(:goal (and
 		(computer-secured computer)
-		(charged turtle)
 		(landed fire-bepop landing-area)
 	))
 )
