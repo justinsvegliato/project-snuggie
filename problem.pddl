@@ -1,15 +1,15 @@
 (define (problem get-the-code)
-	(:domain labrescue)
-	(:objects
-		dozerbot-home turtlebot-home pickup-area launch-area landing-area secure-area - location
-		turtle - turtlebot
-		dozer - dozerbot
-		fire-bepop - fire-bepop
-		power-bepop - power-bepop
-		wam - wam
-	)
+    (:domain labrescue)
+    (:objects
+        dozerbot-home turtlebot-home pickup-area launch-area landing-area secure-area - location
+        turtle - turtlebot
+        dozer - dozerbot
+        fire-bepop - fire-bepop
+        power-bepop - power-bepop
+        wam - wam
+    )
 
-	(:init
+    (:init
         (loc-at turtle turtlebot-home)
         (loc-at dozerbot dozerbot-home)
         (loc-at fire-bepop pickup-area)
@@ -50,10 +50,10 @@
         (= (dist secure-area pickup-area) 3891.10)
         (= (dist secure-area landing-area) 935.75)
         (= (dist secure-area dozerbot-home) 2628.47)
-	)
+    )
 
-	(:goal (and
-		(landed-on fire-bep dozer)
-		(landed-on power-bep turtle)
-	))
+    (:goal (and
+        (landed-on fire-bep dozer)
+        (landed-on power-bep turtle)
+    ))
 )
