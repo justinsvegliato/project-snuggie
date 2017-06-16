@@ -42,12 +42,11 @@
 		(reachable tabletop)
 
 		(has-charger turtlebot-home)
-		(= (bat-lvl turtle) 10)
+		(= (bat-lvl turtle) 5)
 
-		(= (mv-speed turtle) 1)
-		(= (mv-speed dozer) 1)
-		(= (fly-speed fire-bepop) 10)
-		(= (fly-speed power-bepop) 10)
+		(= (mv-speed turtle) 300)
+		(= (fly-speed fire-bepop) 800)
+		(= (fly-speed power-bepop) 800)
         
         (= (dist turtlebot-home launch-area) 1355.95)
         (= (dist turtlebot-home pickup-area) 2466.00)
@@ -101,6 +100,7 @@
 
 	(:goal (and
 		(computer-secured computer)
+		(charged turtle)
 		(landed fire-bepop landing-area)
 	))
 )

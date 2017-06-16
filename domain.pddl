@@ -105,7 +105,6 @@
         :condition (and
             (over all (loc-at ?u ?l))
             (at start (flying ?u))
-            ;(at start (no-debris ?u))
         )
         :effect (and
             (at end (not (loc-at ?u ?l)))
@@ -151,7 +150,7 @@
         :condition
             (over all (landed-on ?u ?r))
         :effect
-            (at start (dozer-on))
+            (at end (dozer-on))
     )
 
     (:durative-action drive-to
@@ -194,7 +193,7 @@
             (over all (placed-on ?p ?t))
         )
         :effect
-            (at start (computer-secured ?p))
+            (at end (computer-secured ?p))
     )
 
     (:durative-action move-debris
