@@ -2,7 +2,7 @@
     (:requirements
         :typing
         :numeric-fluents
-		:equality
+        :equality
         :durative-actions
         :duration-inequalities
     )
@@ -17,31 +17,31 @@
     (:predicates
         (loc-at ?o - locatable ?l - location)
 
-		(flyable ?l - location)
+        (flyable ?l - location)
         (flying ?u - uav)
         (landed ?u - uav ?l - location)
         (landed-on ?u - uav ?r - robot)
-        (clear ?r - robot) 
+        (clear ?r - robot)
 
         (dozer-on)
         (dozer-at-home)
         (fire-off)
         (debris-cleared)
 
-		(no-debris ?l - location)
+        (no-debris ?l - location)
         (on-fire ?l - location)
         (has-charger ?l - location)
-		(is-secure ?l - location)
+        (is-secure ?l - location)
 
         (computer-secured ?p - pickable)
 
-		(reachable ?l - location)
-		(placed ?top - pickable ?l - location)
-		(placed-above ?top - pickable ?bot - pickable)
-		(placed-on ?p - pickable ?t - turtlebot)
-		(free-arm ?w - wam)
-		(holding-u ?w - wam ?u - uav)
-		(holding-p ?w - wam ?p - pickable)
+        (reachable ?l - location)
+        (placed ?top - pickable ?l - location)
+        (placed-above ?top - pickable ?bot - pickable)
+        (placed-on ?p - pickable ?t - turtlebot)
+        (free-arm ?w - wam)
+        (holding-u ?w - wam ?u - uav)
+        (holding-p ?w - wam ?p - pickable)
     )
 
     (:functions
@@ -49,14 +49,14 @@
         (mv-speed ?r - robot)
         (fly-speed ?u - uav)
 
-		(bat-lvl ?t - turtlebot)
+        (bat-lvl ?t - turtlebot)
     )
 
     (:durative-action launch-from-ground
         :parameters (?u - uav ?l - location)
         :duration (= ?duration 3)
         :condition (and
-			(over all (flyable ?l))
+            (over all (flyable ?l))
             (at start (landed ?u ?l))
         )
         :effect (and
@@ -154,18 +154,18 @@
 
     (:durative-action drive-to
         :parameters (?t - turtlebot ?from - location ?to - location)
-        :duration (= ?duration 
+        :duration (= ?duration
             (/ (dist ?from ?to) (mv-speed ?t))
         )
         :condition (and
             (over all (no-debris ?to))
             (at start (loc-at ?t ?from))
-			(at start (>= (bat-lvl ?t) 1))
-		)
+            (at start (>= (bat-lvl ?t) 1))
+        )
         :effect (and
             (at start (not (loc-at ?t ?from)))
             (at end (loc-at ?t ?to))
-			(at end (decrease (bat-lvl ?t) 1))
+            (at end (decrease (bat-lvl ?t) 1))
         )
     )
 
@@ -175,17 +175,17 @@
         :condition (and
             (over all (loc-at ?t ?l))
             (at start (has-charger ?l))
-			(at start (< (bat-lvl ?t) 5))
-		)
+            (at start (< (bat-lvl ?t) 5))
+        )
         :effect (and
-			(at end (assign (bat-lvl ?t) 5))
-		)
+            (at end (assign (bat-lvl ?t) 5))
+        )
     )
 
     (:durative-action secure-computer
         :parameters (?t - turtlebot ?p - pickable ?l - location)
         :duration (= ?duration 2)
-        :condition (and 
+        :condition (and
             (over all (loc-at ?t ?l))
             (over all (is-secure ?l))
             (over all (placed-on ?p ?t))
@@ -199,7 +199,7 @@
         :duration (= ?duration 15)
         :condition (and
             (at start (fire-off))
-            (over all (dozer-on))       
+            (over all (dozer-on))
         )
         :effect
             (at end (debris-cleared))
@@ -216,68 +216,68 @@
         :effect (and
             (at end (dozer-at-home))
             (at end (no-debris ?l))
-		)
+        )
     )
 
-	(:durative-action pickup-uav-loc
-		:parameters (?w - wam ?u - uav ?l - location)
-		:duration (= ?duration 10)
-		:condition (and
-			(over all (reachable ?l))
-			(at start (landed ?u ?l))
-			(at start (free-arm ?w))
-		)
-		:effect (and
-			(at start (not (free-arm ?w)))
-			(at start (not (landed ?u ?l)))
-			(at end (holding-u ?w ?u))
-		)
-	)
+    (:durative-action pickup-uav-loc
+        :parameters (?w - wam ?u - uav ?l - location)
+        :duration (= ?duration 10)
+        :condition (and
+            (over all (reachable ?l))
+            (at start (landed ?u ?l))
+            (at start (free-arm ?w))
+        )
+        :effect (and
+            (at start (not (free-arm ?w)))
+            (at start (not (landed ?u ?l)))
+            (at end (holding-u ?w ?u))
+        )
+    )
 
-	(:durative-action pickup-gadget-other
-		:parameters (?w - wam ?top - pickable ?bot - pickable)
-		:duration (= ?duration 10)
-		:condition (and
-			(at start (placed-above ?top ?bot))
-			(at start (free-arm ?w))
-		)
-		:effect (and
-			(at start (not (free-arm ?w)))
-			(at start (not (placed-above ?top ?bot)))
-			(at end (holding-p ?w ?top))
-		)
-	)
+    (:durative-action pickup-gadget-other
+        :parameters (?w - wam ?top - pickable ?bot - pickable)
+        :duration (= ?duration 10)
+        :condition (and
+            (at start (placed-above ?top ?bot))
+            (at start (free-arm ?w))
+        )
+        :effect (and
+            (at start (not (free-arm ?w)))
+            (at start (not (placed-above ?top ?bot)))
+            (at end (holding-p ?w ?top))
+        )
+    )
 
-	(:durative-action place-uav-robot
-		:parameters (?w - wam ?u - uav ?t - turtlebot ?l - location)
-		:duration (= ?duration 10)
-		:condition (and
-			(over all (reachable ?l))
-			(over all (loc-at ?t ?l))
-			(at start (holding-u ?w ?u))
-			(at start (clear ?t))
-		)
-		:effect (and
-			(at start (not (clear ?t)))
-			(at end (not (holding-u ?w ?u)))
-			(at end (free-arm ?w))
-			(at end (landed-on ?u ?t))
-		)
-	)
+    (:durative-action place-uav-robot
+        :parameters (?w - wam ?u - uav ?t - turtlebot ?l - location)
+        :duration (= ?duration 10)
+        :condition (and
+            (over all (reachable ?l))
+            (over all (loc-at ?t ?l))
+            (at start (holding-u ?w ?u))
+            (at start (clear ?t))
+        )
+        :effect (and
+            (at start (not (clear ?t)))
+            (at end (not (holding-u ?w ?u)))
+            (at end (free-arm ?w))
+            (at end (landed-on ?u ?t))
+        )
+    )
 
-	(:durative-action place-gadget-robot
-		:parameters (?w - wam ?p - pickable ?t - turtlebot ?l - location)
-		:duration (= ?duration 10)
-		:condition (and
-			(over all (reachable ?l))
-			(over all (loc-at ?t ?l))
-			(at start (clear ?t))
-			(at start (holding-p ?w ?p))
-		)
-		:effect (and
-			(at start (not (clear ?t)))
-			(at end (free-arm ?w))
-			(at end (placed-on ?p ?t))
-		)
-	)
+    (:durative-action place-gadget-robot
+        :parameters (?w - wam ?p - pickable ?t - turtlebot ?l - location)
+        :duration (= ?duration 10)
+        :condition (and
+            (over all (reachable ?l))
+            (over all (loc-at ?t ?l))
+            (at start (clear ?t))
+            (at start (holding-p ?w ?p))
+        )
+        :effect (and
+            (at start (not (clear ?t)))
+            (at end (free-arm ?w))
+            (at end (placed-on ?p ?t))
+        )
+    )
 )
