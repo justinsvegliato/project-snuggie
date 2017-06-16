@@ -54,7 +54,7 @@
 
     (:durative-action launch-from-ground
         :parameters (?u - uav ?l - location)
-        :duration (= ?duration 3)
+        :duration (= ?duration 30)
         :condition (and
             (over all (flyable ?l))
             (at start (landed ?u ?l))
@@ -68,7 +68,7 @@
 
     (:durative-action launch-from-robot
         :parameters (?u - uav ?r - robot ?l - location)
-        :duration (= ?duration 3)
+        :duration (= ?duration 30)
         :condition (and
             (over all (flyable ?l))
             (over all (loc-at ?r ?l))
@@ -100,7 +100,7 @@
 
     (:durative-action land-on-ground
         :parameters (?u - uav ?l - location)
-        :duration (= ?duration 5)
+        :duration (= ?duration 50)
         :condition (and
             (over all (loc-at ?u ?l))
             (at start (flying ?u))
@@ -114,7 +114,7 @@
 
     (:durative-action land-on-robot
         :parameters (?u - uav ?r - robot ?l - location)
-        :duration (= ?duration 12)
+        :duration (= ?duration 120)
         :condition (and
             (over all (loc-at ?u ?l))
             (over all (loc-at ?r ?l))
@@ -131,7 +131,7 @@
 
     (:durative-action put-out-fire
         :parameters (?u - fire-bepop ?l - location)
-        :duration (= ?duration 2)
+        :duration (= ?duration 30)
         :condition (and
             (over all (loc-at ?u ?l))
             (over all (flying ?u))
@@ -145,7 +145,7 @@
 
     (:durative-action power-dozerbot
         :parameters (?u - power-bepop ?r - dozerbot)
-        :duration (= ?duration 2)
+        :duration (= ?duration 30)
         :condition
             (over all (landed-on ?u ?r))
         :effect
@@ -171,7 +171,7 @@
 
     (:durative-action charge
         :parameters (?t - turtlebot ?l - location)
-        :duration (= ?duration 5)
+        :duration (= ?duration 50)
         :condition (and
             (over all (loc-at ?t ?l))
             (at start (has-charger ?l))
@@ -184,7 +184,7 @@
 
     (:durative-action secure-computer
         :parameters (?t - turtlebot ?p - pickable ?l - location)
-        :duration (= ?duration 2)
+        :duration (= ?duration 20)
         :condition (and
             (over all (loc-at ?t ?l))
             (over all (is-secure ?l))
@@ -196,7 +196,7 @@
 
     (:durative-action move-debris
         :parameters ()
-        :duration (= ?duration 15)
+        :duration (= ?duration 150)
         :condition (and
             (at start (fire-off))
             (over all (dozer-on))
@@ -207,7 +207,7 @@
 
     (:durative-action return-to-home
         :parameters (?l - location)
-        :duration (= ?duration 15)
+        :duration (= ?duration 150)
         :condition (and
             (over all (dozer-on))
             (at start (fire-off))
@@ -221,7 +221,7 @@
 
     (:durative-action pickup-uav-loc
         :parameters (?w - wam ?u - uav ?l - location)
-        :duration (= ?duration 10)
+        :duration (= ?duration 100)
         :condition (and
             (over all (reachable ?l))
             (at start (landed ?u ?l))
@@ -236,7 +236,7 @@
 
     (:durative-action pickup-gadget-other
         :parameters (?w - wam ?top - pickable ?bot - pickable)
-        :duration (= ?duration 10)
+        :duration (= ?duration 100)
         :condition (and
             (at start (placed-above ?top ?bot))
             (at start (free-arm ?w))
@@ -250,7 +250,7 @@
 
     (:durative-action place-uav-robot
         :parameters (?w - wam ?u - uav ?t - turtlebot ?l - location)
-        :duration (= ?duration 10)
+        :duration (= ?duration 100)
         :condition (and
             (over all (reachable ?l))
             (over all (loc-at ?t ?l))
@@ -267,7 +267,7 @@
 
     (:durative-action place-gadget-robot
         :parameters (?w - wam ?p - pickable ?t - turtlebot ?l - location)
-        :duration (= ?duration 10)
+        :duration (= ?duration 100)
         :condition (and
             (over all (reachable ?l))
             (over all (loc-at ?t ?l))

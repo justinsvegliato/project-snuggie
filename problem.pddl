@@ -3,20 +3,20 @@
     (:objects
         dozerbot-home turtlebot-home pickup-area launch-area landing-area secure-area tabletop - location
         fire - location
-        turtle - turtlebot
-        dozer - dozerbot
-        fire-bepop - fire-bepop
-        power-bepop - power-bepop
+        turtlebot - turtlebot
+        dozerbot - dozerbot
+        fire-bebop - fire-bepop
+        power-bebop - power-bepop
         wam - wam
         computer greenblock - pickable
     )
 
     (:init
-        (loc-at turtle turtlebot-home)
-        (loc-at dozer dozerbot-home)
+        (loc-at turtlebot turtlebot-home)
+        (loc-at dozerbot dozerbot-home)
 
-        (landed fire-bepop tabletop)
-        (landed power-bepop tabletop)
+        (landed fire-bebop tabletop)
+        (landed power-bebop tabletop)
 
         (placed greenblock tabletop)
         (placed-above computer greenblock)
@@ -31,8 +31,8 @@
         (is-secure secure-area)
 
         (free-arm wam)
-        (clear dozer)
-        (clear turtle)
+        (clear dozerbot)
+        (clear turtlebot)
 
         (no-debris launch-area)
         (no-debris pickup-area)
@@ -42,11 +42,11 @@
         (reachable tabletop)
 
         (has-charger turtlebot-home)
-        (= (bat-lvl turtle) 5)
+        (= (bat-lvl turtlebot) 5)
 
-        (= (mv-speed turtle) 300)
-        (= (fly-speed fire-bepop) 800)
-        (= (fly-speed power-bepop) 800)
+        (= (mv-speed turtlebot) 30)
+        (= (fly-speed fire-bebop) 80)
+        (= (fly-speed power-bebop) 80)
 
         (= (dist turtlebot-home launch-area) 1355.95)
         (= (dist turtlebot-home pickup-area) 2466.00)
@@ -100,6 +100,6 @@
 
     (:goal (and
         (computer-secured computer)
-        (landed fire-bepop landing-area)
+        (landed fire-bebop landing-area)
     ))
 )
