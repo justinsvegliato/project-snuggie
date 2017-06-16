@@ -53,7 +53,5 @@
     )
 
     (:goal (and
-        (landed-on fire-bep dozer)
-        (landed-on power-bep turtle)
     ))
 )
