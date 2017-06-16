@@ -1,104 +1,77 @@
-(define (domain labrescue)
+(define (domain lab-rescue)
 	(:requirements
-		:duration-inequalities
-		:durative-actions
-		:numeric-fluents
 		:typing
+		:numeric-fluents
+		:durative-actions
+		:duration-inequalities
 	)
 
 	(:types
-		location locatable - object
-		robot wam drone - locatable
+		location locatable pickable - object
+		wam robot uav - locatable
 		turtlebot dozerbot - robot
-		firedrone driverdrone - drone
+		fire-bepop power-bepop - uav
+		computer greenblock - pickable
 	)
 
 	(:predicates
-		(loc-at ?o - locatable ?l - location)
-		(landed-on ?d - drone ?r - robot)
-		(flying ?d - drone)
-		(clear ?r - robot)
+		(computer-secured ?c - computer)
 	)
 
 	(:functions
-		(dist ?l1 - location ?l2 - location)
-		(mv-speed ?r - robot)
-		(fly-speed ?d - drone)
 	)
 
-	(:durative-action move-t
-		:parameters (?r - turtlebot ?l1 - location ?l2 - location)
-		:duration (= ?duration 
-			(/ (dist ?l1 ?l2) (mv-speed ?r))	
-		)
-		:condition (and
-			(at start (loc-at ?r ?l1))
-		)
-		:effect (and
-			(at start (not (loc-at ?r ?l1)))
-			(at end (loc-at ?r ?l2))
-		)
+	(:durative-action launch-from-ground
+		:parameters (?u - uav ?r - robot ?l - location)
 	)
 
-	(:durative-action move-d
-		:parameters (?r - dozerbot ?d - driverdrone ?l1 - location ?l2 - location)
-		:duration (= ?duration 
-			(/ (dist ?l1 ?l2) (mv-speed ?r))	
-		)
-		:condition (and
-			(over all (landed-on ?d ?r))
-			(at start (loc-at ?r ?l1))
-		)
-		:effect (and
-			(at start (not (loc-at ?r ?l1)))
-			(at end (loc-at ?r ?l2))
-		)
+	(:durative-action launch-from-
+		:parameters (?u - uav ?r - robot ?l - location)
 	)
 
-	(:durative-action fly
-		:parameters (?d - drone ?l1 - location ?l2 - location)
-		:duration (= ?duration 
-			(/ (dist ?l1 ?l2) (fly-speed ?d))	
-		)
-		:condition (and
-			(over all (flying ?d))
-			(at start (loc-at ?d ?l1))
-		)
-		:effect (and
-			(at start (not (loc-at ?d ?l1)))
-			(at end (loc-at ?d ?l2))
-		)
-	)
-
-	(:durative-action take-off
-		:parameters (?d - drone ?r - robot ?l - location)
-		:duration (= ?duration 1)
-		:condition (and
-			(at start (landed-on ?d ?r))
-			(at start (loc-at ?r ?l))
-		)
-		:effect (and
-			(at start (not (landed-on ?d ?r)))
-			(at start (loc-at ?d ?l))
-			(at end (flying ?d))
-			(at end (clear ?r))
-		)
+	(:durative-action fly-to
+		:parameters (?u - uav ?from - location ?to - location)
 	)
 
 	(:durative-action land
-		:parameters (?d - drone ?r - robot ?l - location)
-		:duration (= ?duration 1)
-		:condition (and
-			(over all (loc-at ?d ?l))
-			(over all (loc-at ?r ?l))
-			(at start (flying ?d))
-			(at start (clear ?r))
-		)
-		:effect (and
-			(at start (not (clear ?r)))
-			(at end (not (loc-at ?d ?l)))
-			(at end (not (flying ?d)))
-			(at end (landed-on ?d ?r))
-		)
+		:parameters (?u - uav)
+	)
+
+	(:durative-action land-on-robot
+		:parameters (?u - uav)
+	)
+
+	(:durative-action put-out-fire
+		:parameters (?u - fire-bepop)
+	)
+
+	(:durative-action power-dozerbot
+		:parameters (?u - power-bepop)
+	)
+
+	(:durative-action drive-to
+		:parameters (?t - turtlebot)
+	)
+
+	(:durative-action move
+		:parameters (?w - wam ?o - pickable)
+	)
+
+	(:durative-action charge
+	)
+
+	(:durative-action secure-gadget
+	)
+
+	(:durative-action move-debris
+	)
+
+	(:durative-action return-to-home
+	)
+
+	(:durative-action pickup
+	)
+
+	(:durative-action place
 	)
 )
