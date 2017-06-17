@@ -44,9 +44,9 @@
         (has-charger turtlebot-home)
         (= (bat-lvl turtlebot) 5)
 
-        (= (mv-speed turtlebot) 30)
-        (= (fly-speed fire-bebop) 80)
-        (= (fly-speed power-bebop) 80)
+        (= (mv-speed turtlebot) 50)
+        (= (fly-speed fire-bebop) 120)
+        (= (fly-speed power-bebop) 120)
 
         (= (dist turtlebot-home launch-area) 1355.95)
         (= (dist turtlebot-home pickup-area) 2466.00)
